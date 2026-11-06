@@ -16,7 +16,7 @@ html, body {
            0.5px -0.5px 0 #20201e,
           -0.5px  0.5px 0 #20201e,
            0.5px  0.5px 0 #20201e;
-        background-image: url('assets/img/background.png');
+        background-image: url('public/assets/img/background.png');
         background-size: cover;
         transition: background 1.5s ease-in-out;
       }
