@@ -1072,31 +1072,67 @@ But the Emperor was growing old, and he was no longer young. Were his former mas
         renderMail();
       };
 
-    for(let i=0; i<6; i++){
-      const button = document.getElementById(`option${i+1}`);
+    for (let i = 0; i < 6; i++) {
+      const button = document.getElementById(`option${i + 1}`);
       button.onclick = () => {
-        text.innerHTML = `Oh! I'm afraid you shall have to try that later! Meanwhile, my <a href="mailto:secretwizardscrolls@gmail.com?subject=Send Me A Scroll O Wizard!">mailing list</a> awaits ye!`
-      //   console.log("LOG");
-        // page.innerHTML = ``;
-        if (i == 0){
-          // renderMainUI();
-        } else if(i == 1){
-          // renderMainUI();
-        } else if(i == 2){
-          // renderMainUI();
-        } else if(i == 3){
+        if (i === 0) {
+          renderScheherazade();
+        } else if (i === 1) {
+          text.innerHTML = `My faithful House Mouse said there were simply too many <span id="readGo" style="color: blue; text-decoration: underline; cursor: pointer;">scrolls</span> around here, and curious readers could help make them into <span id="purchaseGo" style="color: blue; text-decoration: underline; cursor: pointer;">books</span>! The Songbook is by my cousin Nimue.`;
+          document.getElementById('readGo').onclick = () => renderScrolls();
+          document.getElementById('purchaseGo').onclick = () => renderCommissions();
+        } else if (i === 2) {
+          renderCommissions();
+        } else if (i === 3) {
           renderSong();
-        } else if(i == 4){
+        } else if (i === 4) {
           continueText = tales[curTale];
           renderScrolls();
-          
-        } else if(i == 5){
+        } else {
           renderSearch();
         }
-        
-        
       };
     }
+
+  }
+
+  // Lightweight static-page destinations for the two screens absent from index.html.
+  // The original, more elaborate PHP versions remain untouched.
+  function renderWizardDestination(heading, description, actions) {
+    document.body.innerHTML = `
+      <div class="square-container">
+        <div class="background"></div>
+        <div style="position:absolute; z-index:3; top:12%; left:12%; width:76%; text-align:center; color:#5b341e; font-size:1rem;">
+          <h2 style="font-size:1.7rem; margin-bottom:1rem;">${heading}</h2>
+          <p>${description}</p>
+          <div id="destination-actions" style="display:flex; flex-direction:column; gap:0.7rem; align-items:center;"></div>
+        </div>
+        <img id="destination-back" src="/public/assets/img/webp/button_back.webp" alt="Back" style="position:absolute;z-index:5;top:2%;left:2%;width:8%;cursor:pointer;" />
+      </div>`;
+    document.getElementById('destination-back').onclick = renderMainUI;
+    const holder = document.getElementById('destination-actions');
+    actions.forEach(([label, callback]) => {
+      const link = document.createElement('button');
+      link.type = 'button';
+      link.textContent = label;
+      link.style.cssText = 'cursor:pointer;font:inherit;padding:0.4rem 0.8rem;background:#f2dfb4;color:#5b341e;border:2px solid #795841;border-radius:6px;';
+      link.onclick = callback;
+      holder.appendChild(link);
+    });
+  }
+
+  function renderScheherazade() {
+    renderWizardDestination('Scheherazade', 'Explore the wizard’s tales and the world of Secret Wizard Scrolls.', [
+      ['Read the scrolls', () => renderScrolls()],
+      ['Return to the wizard', () => renderMainUI()]
+    ]);
+  }
+
+  function renderCommissions() {
+    renderWizardDestination('Commissions', 'Interested in commissioning the continuation of a tale? Contact the wizard to discuss your request.', [
+      ['Browse the scrolls', () => renderScrolls()],
+      ['Email the wizard', () => { window.location.href = 'mailto:secretwizardscrolls@gmail.com?subject=Scroll%20Commission'; }]
+    ]);
   }
 
   // let shortest = 999999;
@@ -1237,11 +1273,11 @@ But the Emperor was growing old, and he was no longer young. Were his former mas
       <div class="square-container">
         <div class="background"></div>
         <div class="crystalbackground">
-          <img src="//public/assets/img/webp/search_resultsBox.webp" alt="frame" style="max-width: 100%; z-index: 1; position: absolute;"/>
+          <img src="/public/assets/img/webp/search_resultsBox.webp" alt="frame" style="max-width: 100%; z-index: 1; position: absolute;"/>
           <p id="resultsInfo" style="max-width: 95%; color: white; z-index: 2; position: absolute; top: 3%; left: 15%; font-size: 2.3rem;">There are <span style="font-size: 2.5rem">16</span> results:</p>
           
-          <img src="//public/assets/img/webp/search_resultGlass.webp" alt="searching glass" style="max-width: 100%; z-index: 2; position: absolute; pointer-events: none;"/>
-          <img src="//public/assets/img/webp/search_resultFrame.webp" alt="frame" style="max-width: 100%; z-index: 2; position: absolute;pointer-events: none;"/>
+          <img src="/public/assets/img/webp/search_resultGlass.webp" alt="searching glass" style="max-width: 100%; z-index: 2; position: absolute; pointer-events: none;"/>
+          <img src="/public/assets/img/webp/search_resultFrame.webp" alt="frame" style="max-width: 100%; z-index: 2; position: absolute;pointer-events: none;"/>
           <p id="resultsText" style="max-width: 75%; width: 60%; height: 42%; padding: 10px; color: #454D66; z-index: 2; pointer-events: none; position: absolute; top: 28%; left: 19%; font-size: 1.5rem;">... Try again!</p>
   
           <img src="/public/assets/img/webp/scroll_continuebtn.webp" alt="continue"  id="buttonCont" style="cursor: pointer; position: absolute; top: 78.5%; left: 32%; max-width: 75%; width: 32.5%; z-index: 1"/>
@@ -1455,8 +1491,8 @@ function searchGetWordMatches(word, stringArray) {
       function anim(){
           setTimeout(function() {
           const rot = jump ? 7 : 0;
-          const img = jump ? "mail_hands_twist.png" : "mail_hands.png";
-          if(email.value.match(/^\S+@\S+\.\S+$/))hands.src = `/public/assets/img/${img}`;
+          const img = jump ? "mail_hands_twist.webp" : "mail_hands.webp";
+          if(email.value.match(/^\S+@\S+\.\S+$/))hands.src = `/public/assets/img/webp/${img}`;
           mouse.style.transform = `rotateZ(${rot}deg)`;
           jump = !jump;
           anim();

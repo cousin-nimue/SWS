@@ -405,5 +405,5 @@
 
     // const imgW = Math.min(window.innerWidth - 10, 700);
     // img.width = imgW;
-    img.src = `https://github.com/dom-github/secretwizardscrolls/blob/main/assets/img/ballad_seven.png?raw=true`;
+    img.src = `/public/assets/img/webp/ballad_seven.webp`;
 })();
