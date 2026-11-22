@@ -1575,7 +1575,7 @@ function startOrbCanvas(width, height) {
   }
 
   const offscreen = canvas.transferControlToOffscreen();
-  orbWorker = new Worker('orbWorker.js');
+  orbWorker = new Worker('/public/orbWorker.js');
   orbSizeM = Math.min(document.body.clientWidth, document.body.clientHeight);
   canvas.style.width = `${width}px`;
   canvas.style.height = `${height}px`;
